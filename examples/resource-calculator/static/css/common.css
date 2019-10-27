@@ -1,0 +1,36 @@
+.center {
+  text-align: center;
+  margin: 30px auto 40px;
+}
+
+.non-form-elem {
+  margin-top: 12px;
+}
+
+.non-form-elem-lg {
+  margin-top: 3px;
+}
+
+.slider-ui {
+  display: inline-block;
+  padding-top: 7px;
+  cursor: default;
+}
+
+.result {
+  color: #999;
+  font-size: 13px;
+  margin: 10px 0 10px;
+  cursor: default;
+}
+
+.quantity {
+  color: #FF7000;
+  font-size: 20px;
+}
+
+.info {
+  border-bottom:1px dotted #999;
+  cursor: pointer;
+}
+

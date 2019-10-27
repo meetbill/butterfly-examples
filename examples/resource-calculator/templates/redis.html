@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Redis 资源计算器</title>
+  <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/twitter-bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/jquery-ui-bootstrap/0.5pre/css/custom-theme/jquery-ui-1.10.0.custom.css">
+  <link rel="stylesheet" type="text/css" href="static/css/common.css">
+  <link rel="stylesheet" type="text/css" href="static/css/redis.css">
+  <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script language="javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-ui-bootstrap/0.5pre/js/jquery-ui-1.9.2.custom.min.js"></script>
+  <script language="javascript" src="static/js/common.js"></script>
+  <script language="javascript" src="static/js/redis.js"></script>
+</head>
+<body>
+
+<header>
+<h1 class="center">Redis 资源计算器</h1>
+</header>
+
+<div class="container">
+<div class="row well">
+
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label class="col-sm-3 control-label">部署副本数</label>
+    <div class="col-sm-6">
+      <div class="btn-group btn-group-sm non-form-elem-lg" data-toggle="buttons">
+        <label id="region-bj" class="region">
+          <span class="region-desc">北京</span>
+          <input class="region-spinner" id="region-spinner-bj" />
+        </label>
+        <label id="region-nj" class="region">
+          <span class="region-desc">南京</span>
+          <input class="region-spinner" id="region-spinner-nj" />
+        </label>
+        <label id="region-gz" class="region">
+          <span class="region-desc">广州</span>
+          <input class="region-spinner" id="region-spinner-gz" />
+        </label>
+      </div>
+    </div>
+    <div class="col-sm-3"></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Key 的长度</label>
+    <div class="col-sm-6"><div id="slider-key-len" class="non-form-elem"></div></div>
+    <div class="col-sm-3"><div id="slider-ui-key-len" class="slider-ui"></div></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Key 的总数</label>
+    <div class="col-sm-6"><div id="slider-key-num" class="non-form-elem"></div></div>
+    <div class="col-sm-3"><div id="slider-ui-key-num" class="slider-ui"></div></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Value 数据类型</label>
+    <div class="col-sm-6">
+      <div class="btn-group btn-group-sm non-form-elem-lg" data-toggle="buttons">
+        <label class="btn btn-default value-type active" id="value-type-string"><input type="radio" checked>String</label>
+        <label class="btn btn-default value-type" id="value-type-hash"><input type="radio">Hash</label>
+        <label class="btn btn-default value-type" id="value-type-list"><input type="radio">List</label>
+        <label class="btn btn-default value-type" id="value-type-set"><input type="radio">Set</label>
+		<label class="btn btn-default value-type" id="value-type-sorted-set"><input type="radio">Sorted Set</label>
+      </div>
+    </div>
+    <div class="col-sm-3"></div>
+  </div>
+  <div class="form-group" style="display:none">
+    <label id="label-item-num" class="col-sm-3 control-label">Item 的个数</label>
+    <div class="col-sm-6"><div id="slider-item-num" class="non-form-elem"></div></div>
+    <div class="col-sm-3"><div id="slider-ui-item-num" class="slider-ui info" data-toggle="tooltip" title="Item个数：value里包含的item平均个数"></div></div>
+  </div>
+  <div class="form-group">
+    <label id="label-item-len" class="col-sm-3 control-label">Value 的长度</label>
+    <div class="col-sm-6"><div id="slider-item-len" class="non-form-elem"></div></div>
+    <div class="col-sm-3"><div id="slider-ui-item-len" class="slider-ui info" data-toggle="tooltip" title="Item长度：value里包含的item平均大小"></div></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">总读 QPS</label>
+    <div class="col-sm-6"><div id="slider-read-qps" class="non-form-elem"></div></div>
+    <div class="col-sm-3"><div id="slider-ui-read-qps" class="slider-ui"></div></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">总写 QPS</label>
+    <div class="col-sm-6"><div id="slider-write-qps" class="non-form-elem"></div></div>
+    <div class="col-sm-3"><div id="slider-ui-write-qps" class="slider-ui"></div></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" style="margin-top: 10px;">当前资源量</label>
+    <div class="col-sm-9">
+      <div class="result">
+        当前数据量 =
+        ( <span id="result-key-len" class="info" data-toggle="tooltip" title="Key的长度"></span> +
+        <span id="result-value-multi-item">
+          (<span id="result-item-len" class="info" data-toggle="tooltip" title="Item的平均长度"></span> +
+          <span id="result-item-overhead" class="info" data-toggle="tooltip" title="Item的额外开销"></span>) *
+          <span id="result-item-num" class="info" data-toggle="tooltip" title="一个Value里Item的个数"></span>
+        </span>
+        <span id="result-value-single-item" class="info" data-toggle="tooltip" title="Value的平均长度"></span> +
+        <span id="result-value-overhead" class="info" data-toggle="tooltip" title="Value的额外开销"></span>
+        ) * <span id="result-key-num" class="info" data-toggle="tooltip" title="Key的个数"></span> *
+        <span id="result-space-copy-num"></span>副本 *
+        <span class="info" data-toggle="tooltip" title="jemalloc的额外开销">115%</span> =
+        <span id="result-space" class="quantity" raw=""></span></div>
+      <div class="result">当前需机器 =
+        max(<span id="result-by-space" class="info" data-toggle="tooltip" title="按内存算需机器 = 数据量 / 40GB每台(64G*60%)"></span>,
+        <span id="result-by-cpu" class="info" data-toggle="tooltip" title="按CPU算redis需机器 = 读写QPS / 4万每台"></span>,
+        <span id="result-by-net" class="info" data-toggle="tooltip" title="按网卡算redis需机器 = 读写QPS * KV总长度/ 70MB每台"></span>) + max(
+        <span id="result-by-cpu-proxy" class="info" data-toggle="tooltip" title="按CPU算proxy需机器 = 读写QPS / 4万每台"></span>,
+        <span id="result-by-net-proxy" class="info" data-toggle="tooltip" title="按网卡算proxy需机器 = 读写QPS * KV总长度/ 70MB每台"></span>)
+        = <span id="result-server" class="quantity" raw=""></span> 台</div>
+    </div>
+  </div>
+  <div class="form-group" style="margin-bottom: 30px;">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+      <button id="button-add-to-cart" type="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-shopping-cart"></span> 添加至购物车
+      </button>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">购物车</label>
+	<div id="container-cart" class="col-sm-7 non-form-elem-lg">
+      <div id="text-empty-cart" class="non-form-elem-lg">购物车暂时为空。</div>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" style="margin-top: 10px;">总资源量</label>
+    <div class="col-sm-9">
+      <div class="result">总数据量 = <span id="result-sum-space" class="quantity">0.00</span></div>
+      <div class="result">总需机器 = <span id="result-sum-server" class="quantity">0.00</span> 台</div>
+    </div>
+  </div>
+</form>
+
+</div>
+</div>
+
+</body>
+</html>
+
+
