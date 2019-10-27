@@ -21,8 +21,8 @@ tags:
 ```
 http://127.0.0.1:8585/resource/redis
 ```
-[redis](https://github.com/meetbill/butterfly_examples/blob/master/images/resource-calculator.png)
+![redis](https://github.com/meetbill/butterfly_examples/blob/master/images/resource-calculator.png)
 
 ## Wiki
 
-![wiki](https://github.com/meetbill/butterfly_examples/wiki/resource-calculator)
+[wiki](https://github.com/meetbill/butterfly_examples/wiki/resource-calculator)
