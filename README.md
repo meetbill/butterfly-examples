@@ -18,6 +18,7 @@
 ## Butterfly 示例
 
 > * [Redis 资源计算器](./examples/resource-calculator)
+> * [定时任务平台](./examples/crontab)
 
 ## 参加步骤
 
