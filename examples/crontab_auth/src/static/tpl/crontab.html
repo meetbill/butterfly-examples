@@ -1,0 +1,75 @@
+﻿<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;">
+<!-- main -->
+<div class="col">
+    <!-- main header -->
+    <div class="bg-light lter b-b wrapper-md">
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+                <h1 class="m-n font-thin h3 text-black">定时任务</h1>
+                <small class="text-muted">定时任务列表</small>
+            </div>
+        </div>
+    </div>
+    <!-- / main header -->
+
+    <div class="panel-body">
+        <button type="button" ng-click="addJob()" class="btn btn-sm btn-success">
+            <i class="glyphicon glyphicon-plus"></i> 添加任务
+        </button>
+    </div>
+
+    <table class="table table-bordered table-hover table-condensed bg-white-only">
+        <tr style="font-weight: bold">
+          <td style="width:10%">任务名</td>
+          <td style="width:15%">执行规则</td>
+          <td style="width:20%">执行命令</td>
+          <td style="width:20%">预计下次执行时间</td>
+          <td style="width:30%">编辑</td>
+        </tr>
+        <tr ng-repeat="job in jobs">
+          <td class="v-middle">
+            <!-- 编辑用户名 (text with validation) -->
+            <span editable-text="job.name" e-name="name" e-form="rowform">
+              __ job.name || '空' __
+            </span>
+          </td>
+          <td class="v-middle">
+            <!-- editable group (select-remote) -->
+            <span editable-text="job.rule" e-name="rule" e-form="rowform">
+              __ job.rule __
+            </span>
+          </td>
+          <td class="v-middle">
+            <!-- editable status (select-local) -->
+            <span editable-text="job.cmd" e-name="cmd" e-form="rowform">
+              __ job.cmd __
+            </span>
+          </td>
+          <td class="v-middle">
+            <!-- editable group (select-remote) -->
+            <span editable-textt="job.nexttime" e-name="rule">
+              __ job.nexttime __
+            </span>
+          </td>
+          <td style="white-space: nowrap">
+            <!-- form -->
+            <form editable-form name="rowform" onbeforesave="saveJob($data)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == job">
+              <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-info">
+                保存
+              </button>
+              <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-default">
+                取消
+              </button>
+            </form>
+            <div class="buttons" ng-show="!rowform.$visible">
+              <button class="btn btn-sm btn-info" ng-click="rowform.$show()">编辑</button>
+              <button class="btn btn-sm btn-danger" ng-click="removeJob(job.name)">删除</button>
+            </div>
+          </td>
+        </tr>
+    </table>
+</div>
+<!-- / main -->
+</div>

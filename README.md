@@ -19,6 +19,7 @@
 
 > * [Redis 资源计算器](./examples/resource-calculator)
 > * [定时任务平台](./examples/crontab)
+> * [定时任务平台含登录页](./examples/crontab_auth)
 
 ## 参加步骤
 
