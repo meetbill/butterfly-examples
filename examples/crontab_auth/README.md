@@ -49,7 +49,7 @@ git clone https://github.com/meetbill/butterfly.git
 git clone https://github.com/meetbill/pine-Angulr.git
 
 export butterfly_dir=$(PWD)/crontab
-mkdir -p ${butterfly_dir}
+#mkdir -p ${butterfly_dir}
 
 cp -rf butterfly/butterfly/*  ${butterfly_dir}
 cp -rf pine-Angulr/src/static ${butterfly_dir}
@@ -57,7 +57,10 @@ cp -rf pine-Angulr/src/templates ${butterfly_dir}
 
 # install crontab
 cd butterfly_examples/examples/crontab_auth
-bash install
+bash install ${butterfly_dir}
+
+# Examples ----------- 脚本里设置了如果有本地目录，则会自行安装，不需要上面步骤 :-) 方便我自行使用
+sh install.sh ~/test/crontab
 ```
 > 配置
 ```

@@ -17,9 +17,22 @@ CUR_DIR=`S=$(readlink "$0"); [ -z "$S"  ] && S=$0; cd $(dirname $S);pwd`
 cd ${CUR_DIR}
 
 butterfly_dir=$1
-
 [[ -z "${butterfly_dir}" ]] && echo "usage:bash ./install.sh butterfly_dir" && exit -1
-[[ ! -d "${butterfly_dir}" ]] && echo "not found butterfly dir" && exit -1
+[[ -d "${butterfly_dir}" ]] && echo "butterfly dir is exists" && exit -1
+
+mkdir -p ${butterfly_dir}
+
+local_butterfly_dir=~/meetbill/github/butterfly
+local_angulr_dir=~/meetbill/github/pine-Angulr
+if [[ -d "${local_butterfly_dir}"  ]];then
+    cp -rf ${local_butterfly_dir}/butterfly/* $butterfly_dir
+fi
+if [[ -d "${local_angulr_dir}"  ]];then
+    cp -rf ${local_angulr_dir}/src/static $butterfly_dir
+    cp -rf ${local_angulr_dir}/src/templates $butterfly_dir
+fi
+
+
 [[ ! -d "${butterfly_dir}/handlers"  ]] && echo "the dir is not a butterfly dir" && exit -1
 [[ ! -d "${butterfly_dir}/static"  ]] && echo "the dir is not install angulr" && exit -1
 
