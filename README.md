@@ -1,4 +1,4 @@
-# butterfly_examples
+# butterfly-examples
 蝶舞示例
 <div align=center><img src="https://github.com/meetbill/butterfly/blob/master/images/butterfly.png" width="350"/></div>
 
@@ -18,8 +18,8 @@
 ## Butterfly 示例
 
 > * [Redis 资源计算器](./examples/resource-calculator)
-> * [定时任务平台](./examples/crontab)
-> * [定时任务平台含登录页](./examples/crontab_auth)
+> * [定时任务平台 -- 如期](./examples/ruqi)
+> * [定时任务平台含登录页](./examples/crontab_auth) --- 旧
 
 ## 参加步骤
 

@@ -13,11 +13,11 @@ app.controller('CrontabCtrl', ['$scope', '$filter', '$http', 'editableOptions', 
     //$scope.jobs = [
     //  {name: 'exe_cmd', status: 2, cmd: "ls", rule: '* * * * * ',nexttime :"20190808 20:24"},
     //];
-    $http.get("/x/get_jobs").success(function (response) {$scope.jobs = response.data;})
+    $http.get("ruqi/get_jobs").success(function (response) {$scope.jobs = response.data;})
 
     // remove job
     $scope.removeJob = function(name) {
-        var remove_job = $http.post("/x/remove_job",{
+        var remove_job = $http.post("ruqi/remove_job",{
                 "name":name}
                 )
         remove_job.success(function (response) {
@@ -43,6 +43,6 @@ app.controller('CrontabCtrl', ['$scope', '$filter', '$http', 'editableOptions', 
     // update job
     $scope.saveJob = function(data) {
       //$scope.user not updated yet
-      return $http.post('x/add_job', data);
+      return $http.post('ruqi/add_job', data);
     };
   }]);

@@ -3,19 +3,19 @@ import os
 import struct
 
 from xlib import util
+from xlib.middleware import funcattr
 from xlib.httpgateway import Request
 from xlib import retstat
+from handlers.ruqi import persistent
 
-import persistent
-
-from conf import logger_conf
-
-__info__ = "meetbill"
-__version__ = "1.0.1"
+__info = "ruqi"
+__version = "1.0.1"
 
 crontab = persistent.Crontab()
 crontab.start()
 
+
+@funcattr.api
 def ping(req):
     """demo
     Args:
@@ -40,30 +40,50 @@ def ping(req):
     req.log_params["x"] = 1
     clen = struct.unpack("i", os.urandom(4))[0] % 64 + 64
     randstr = util.Base64_16.bin_to_b64(os.urandom(clen))
-    return retstat.OK, {"randstr": randstr}, [(__info__, __version__)]
+    return retstat.OK, {"randstr": randstr}, [(__info, __version)]
 
 
-def hello(req, str_info):
-    isinstance(req, Request)
-    return retstat.OK, {"str_info": str_info}, [(__info__, __version__)]
-
+@funcattr.api
 def get_jobs(req):
+    """
+    获取定期任务列表
+    """
     isinstance(req, Request)
     jobs_result = {}
     jobs = crontab.get_jobs()
     jobs_result["data"] = jobs
-    return retstat.OK, jobs_result, [(__info__, __version__)]
+    return retstat.OK, jobs_result, [(__info, __version)]
 
-def add_job(req,name,rule,cmd):
+
+@funcattr.api
+def add_job(req, name, rule, cmd):
+    """
+    添加定时任务
+
+    Args:
+        name: (str) job name
+        rule: (str) "* * * * * *"
+        cmd: (str) 执行命令
+    Returns:
+        status, content, headers
+    """
     isinstance(req, Request)
-    if crontab.add_job(name,rule,cmd):
-        return retstat.OK, {}, [(__info__, __version__)]
+    if crontab.add_job(name, rule, cmd):
+        return retstat.OK, {}, [(__info, __version)]
     else:
-        return retstat.ERR, {}, [(__info__, __version__)]
+        return retstat.OK, {}, [(__info, __version)]
 
-def remove_job(req,name):
+
+@funcattr.api
+def remove_job(req, name):
+    """
+    删除定时任务
+
+    Args:
+        name: (str) job name
+    Returns:
+        status, content, headers
+    """
     isinstance(req, Request)
     crontab.remove_job(name)
-    return retstat.OK, {}, [(__info__, __version__)]
-
-
+    return retstat.OK, {}, [(__info, __version)]

@@ -113,4 +113,4 @@ http://127.0.0.1:8585/main
 
 ## 3 Wiki
 
-[wiki](https://github.com/meetbill/butterfly_examples/wiki/apscheduler)
+[wiki](https://github.com/meetbill/butterfly/wiki/butterfly_ruqi)
