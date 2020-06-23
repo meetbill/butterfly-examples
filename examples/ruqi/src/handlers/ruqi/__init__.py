@@ -71,7 +71,7 @@ def add_job(req, name, rule, cmd):
     if crontab.add_job(name, rule, cmd):
         return retstat.OK, {}, [(__info, __version)]
     else:
-        return retstat.OK, {}, [(__info, __version)]
+        return retstat.ERR, {}, [(__info, __version)]
 
 
 @funcattr.api
