@@ -52,10 +52,16 @@ class Crontab(object):
         self._scheduler.add_jobstore(ShelveJobStore('example.db'), 'shelve')
 
     def add_job(self, name, rule, cmd):
+        """
+        创建任务
+        """
         #cron_rule = "* * * * * *"
         cron_rule_list = rule.split(' ')
         if len(cron_rule_list) != 6:
             return False
+
+        # 删除同名 job
+        self.remove_job(name)
 
         kwargs = {}
         kwargs["cmd"] = cmd
@@ -75,9 +81,15 @@ class Crontab(object):
         return True
 
     def start(self):
+        """
+        启动 scheduler
+        """
         self._scheduler.start()
 
     def get_jobs(self):
+        """
+        获取所有任务
+        """
         jobs = []
         for job in self._scheduler.get_jobs():
             # cron_rule
@@ -95,6 +107,7 @@ class Crontab(object):
                 month=cron['month'],
                 day_of_week=cron["day_of_week"]
             )
+            jobinfo["id"] = job.id
             jobinfo["rule"] = cron_rule
             jobinfo["nexttime"] = str(job.next_run_time)
             jobinfo["name"] = job.name
