@@ -20,6 +20,7 @@
 > * [Redis 资源计算器](./examples/resource-calculator)
 > * [定时任务平台 -- 如期](./examples/ruqi)
 > * [定时任务平台含登录页](./examples/crontab_auth) --- 旧
+> * [看板娘 ------ 度小蝶](./examples/du_xiaodie)
 
 ## 参加步骤
 
