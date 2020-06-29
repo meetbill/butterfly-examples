@@ -203,11 +203,14 @@ function initWidget(config, apiPath) {
 			apiPath
 		};
 	}
-	document.body.insertAdjacentHTML("beforeend", `<div id="waifu-toggle">
-			<span>度小蝶</span>
-		</div>`);
+
+    // 当看板娘隐藏时，在网站边上重新打开看板娘的按钮
+	document.body.insertAdjacentHTML("beforeend", `<div id="waifu-toggle"><span>度小蝶</span></div>`);
 	let toggle = document.getElementById("waifu-toggle");
+
+    // 添加按钮点击事件
 	toggle.addEventListener("click", () => {
+        // 点击按钮时，移除 "waifu-toggle-active" 样式
 		toggle.classList.remove("waifu-toggle-active");
 		if (toggle.getAttribute("first-time")) {
 			loadWidget(config);
@@ -220,6 +223,8 @@ function initWidget(config, apiPath) {
 			}, 0);
 		}
 	});
+
+    // 当发现 localStorage 中有 waifu-display key 时，如果点击关闭的时间在一天以内，则添加 "waifu-toggle-active" 样式
 	if (localStorage.getItem("waifu-display") && Date.now() - localStorage.getItem("waifu-display") <= 86400000) {
 		toggle.setAttribute("first-time", true);
 		setTimeout(() => {
