@@ -190,8 +190,9 @@ function loadWidget(config) {
 			let target = randomSelection(modelList.models[modelId]);
 			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
 		} else {
-			loadlive2d("live2d", `${apiPath}get/?id=${modelId}-${modelTexturesId}`);
-			console.log(`Live2D 模型 ${modelId}-${modelTexturesId} 加载完成`);
+            // 仅获取服务端 nepnep 模型
+            loadlive2d('live2d', 'static/DuXiaoDie/model/nepnep/index.json');
+            //loadlive2d("live2d", `${apiPath}get/?id=${modelId}-${modelTexturesId}`);
 		}
 	}
 }
