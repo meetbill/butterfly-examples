@@ -2,6 +2,7 @@
 <!-- vim-markdown-toc GFM -->
 
 * [1 前言](#1-前言)
+    * [1.1 live2d 技术简介](#11-live2d-技术简介)
 * [2 使用方法](#2-使用方法)
     * [2.1 部署 butterfly + butterfly-fe](#21-部署-butterfly--butterfly-fe)
     * [2.2 部署前端服务](#22-部署前端服务)
@@ -19,6 +20,11 @@
 # 1 前言
 
 通过此例子可以学习下使用 js 动态创建样式
+## 1.1 live2d 技术简介
+
+Live2D 是一种应用于电子游戏的绘图渲染技术，由日本 Cybernoids 公司开发，通过一系列的连续图像和人物建模来生成一种类似二维图像的三维模型，
+换句话说就是 2D 的素材实现一定程度的 3D 效果，但只能是一定程度 3D，因为 Live 2D 人物无法大幅度转身。
+
 
 # 2 使用方法
 
@@ -155,4 +161,5 @@ initWidget 第一个参数为 waifu-tips.json 的路径，第二个参数为 API
 
 # 6 传送门
 
-[live2d-widget](https://github.com/stevenjoezhang/live2d-widget)
+> * 前端之 [live2d-widget](https://github.com/stevenjoezhang/live2d-widget)
+> * 后端之 [live2d_api](https://github.com/fghrsh/live2d_api) 模型可以在这里找到哈
