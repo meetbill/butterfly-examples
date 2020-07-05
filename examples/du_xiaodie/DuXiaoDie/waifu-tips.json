@@ -24,7 +24,7 @@
 		"selector": "#waifu-tool .fa-times",
 		"text": ["到了要说再见的时候了吗？", "呜呜 QAQ 后会有期……", "不要抛弃我呀……", "我们，还能再见面吗……", "哼，你会后悔的！"]
 	}, {
-		"selector": ".menu-item-home a",
+		"selector": ".navbar-header a",
 		"text": ["点击前往首页，想回到上一页可以使用浏览器的后退功能哦。", "点它就可以回到首页啦！", "回首页看看吧。"]
 	}, {
 		"selector": ".menu-item-about a",
@@ -173,6 +173,9 @@
 	}, {
 		"selector": ".vcontent",
 		"text": ["哇，快看看这个精彩评论！", "如果有疑问，请尽快留言哦～"]
+	}, {
+		"selector": "a[href$='/docs']",
+		"text": ["要去看看 <span>{text}</span> 么？"]
 	}],
 	"click": [{
 		"selector": "#waifu #live2d",

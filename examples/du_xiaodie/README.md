@@ -3,6 +3,9 @@
 
 * [1 前言](#1-前言)
     * [1.1 live2d 技术简介](#11-live2d-技术简介)
+    * [1.2 看板娘可以实现哪些功能？](#12-看板娘可以实现哪些功能)
+        * [1.2.1 检测事件并弹出特定消息](#121-检测事件并弹出特定消息)
+        * [1.2.2 看板娘的按钮](#122-看板娘的按钮)
 * [2 使用方法](#2-使用方法)
     * [2.1 部署 butterfly + butterfly-fe](#21-部署-butterfly--butterfly-fe)
     * [2.2 部署前端服务](#22-部署前端服务)
@@ -15,11 +18,14 @@
     * [4.2 按钮样式](#42-按钮样式)
     * [4.3 loadlive2d 及切换看板娘模型](#43-loadlive2d-及切换看板娘模型)
         * [4.3.1 如何切换看板娘模型](#431-如何切换看板娘模型)
-        * [4.3.2 加载 model.json 方式, 以 nepnep 为例](#432-加载-modeljson-方式-以-nepnep-为例)
-            * [方式 1 之 cdn (推荐)](#方式-1-之-cdn-推荐)
+        * [4.3.2 加载 model.json 方式，以 nepnep 为例](#432-加载-modeljson-方式以-nepnep-为例)
+            * [方式 1 之 cdn （推荐）](#方式-1-之-cdn-推荐)
             * [方式 2 服务端接口获取 model.json](#方式-2-服务端接口获取-modeljson)
-            * [方式 3 服务端静态文件 (推荐)](#方式-3-服务端静态文件-推荐)
+            * [方式 3 服务端静态文件 （推荐）](#方式-3-服务端静态文件-推荐)
         * [4.3.3 浅谈 model.json](#433-浅谈-modeljson)
+    * [4.4 如何丰富看板娘的 mousemove/click 监听事件](#44-如何丰富看板娘的-mousemoveclick-监听事件)
+        * [4.4.1 浅谈 event](#441-浅谈-event)
+        * [4.4.2 例子之鼠标移动到帮助文档 menu 时，弹出消息](#442-例子之鼠标移动到帮助文档-menu-时弹出消息)
 * [5 todo](#5-todo)
 * [6 传送门](#6-传送门)
 
@@ -32,6 +38,35 @@
 Live2D 是一种应用于电子游戏的绘图渲染技术，由日本 Cybernoids 公司开发，通过一系列的连续图像和人物建模来生成一种类似二维图像的三维模型，
 换句话说就是 2D 的素材实现一定程度的 3D 效果，但只能是一定程度 3D，因为 Live 2D 人物无法大幅度转身。
 
+## 1.2 看板娘可以实现哪些功能？
+
+看板娘的界面本身都是静态文件，看板娘的有趣的灵魂时如何实现的？
+
+### 1.2.1 检测事件并弹出特定消息
+
+> 页面初始化加载弹出特定消息
+```
+页面初始化加载时，根据当前时间弹出不同的消息
+```
+> 检测 visibilitychange 事件
+```
+检测到 visibilitychange 事件，表示刚从其他页面切换到此画面，会弹窗想念了之类的话
+```
+> 检测 copy 事件
+```
+检测到复制事件时，进行弹出特定消息
+```
+> 检测鼠标 mousemove 事件
+```
+根据 waifu-tips.json 弹出消息
+```
+> 检测鼠标 click 事件
+```
+根据 waifu-tips.json 弹出消息
+```
+### 1.2.2 看板娘的按钮
+
+在看板娘的旁边可以看到有许多按钮，可以通过丰富这些按钮功能来丰富看板娘的功能
 
 # 2 使用方法
 
@@ -167,18 +202,18 @@ loadlive2d('live2d', 'model.json');
 ### 4.3.1 如何切换看板娘模型
 
 切换看板娘模型即修改 model.json
-### 4.3.2 加载 model.json 方式, 以 nepnep 为例
-#### 方式 1 之 cdn (推荐)
+### 4.3.2 加载 model.json 方式，以 nepnep 为例
+#### 方式 1 之 cdn （推荐）
 ```
 loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
-如:
+如：
 loadlive2d('live2d', 'https://cdn.jsdelivr.net/gh/fghrsh/live2d_api/model/HyperdimensionNeptunia/nepnep/index.json');
 ```
 #### 方式 2 服务端接口获取 model.json
 ```
 loadlive2d("live2d", `${apiPath}get/?id=${modelId}-${modelTexturesId}`);
 
-如:
+如：
 loadlive2d("live2d", `/duxiaodie/get/?id=${modelId}-${modelTexturesId}`);
 ```
 butterfly 后端 handler
@@ -186,7 +221,7 @@ butterfly 后端 handler
 # coding=utf8
 """
 # Description:
-请求 模型_id-皮肤_id 返回 model.json
+请求 模型_id- 皮肤_id 返回 model.json
 """
 import os
 import json
@@ -233,15 +268,15 @@ class modelTextures(object):
 
             tmp = list()
             for key, value in order_json.item():
-                tmp2 = list()     
+                tmp2 = list()
                 foreach ($v as $textures_dir) {
-                    $tmp3 = array(); 
+                    $tmp3 = array();
                     foreach (glob('../model/'.$modelName.'/'.$textures_dir.'/*') as $n => $m) $tmp3['merge'.$n] = str_replace('../model/'.$modelName.'/', '', $m);
-                        $tmp2 = array_merge_recursive($tmp2, $tmp3);   
+                        $tmp2 = array_merge_recursive($tmp2, $tmp3);
                 }
                 foreach ($tmp2 as $v4) $tmp4[$k][] = str_replace('\/', '/', json_encode($v4));
                 $tmp = self::array_exhaustive($tmp, $tmp4[$k]);                                                                    }
-            foreach ($tmp as $v) $textures[] = json_decode('['.$v.']', 1); 
+            foreach ($tmp as $v) $textures[] = json_decode('['.$v.']', 1);
             return $textures;"""
         else:
             textures_path_pattern = 'model/' + modelName + '/textures/*'
@@ -268,8 +303,8 @@ class modelTextures(object):
     #获取材质名称
     def get_name(self, modelName, id):
         cache_list = self.get_list(modelName)
-        return cache_list['textures'][id-1]   
-    
+        return cache_list['textures'][id-1]
+
     #数组穷举合并
     #def array_exhaustive(self, arr1, arr2):
         #foreach ($arr2 as $k => $v) {
@@ -280,7 +315,7 @@ class modelTextures(object):
 def get(req, id):
     pass
     try:
-        #获取参数id的值
+        #获取参数 id 的值
         arg_id = id
         model_info = arg_id.split("-")
         if len(model_info) != 2:
@@ -346,13 +381,13 @@ def get(req, id):
 ```
 使用此方式有个问题
 
-浏览器在获取到 model.json 后，要对 model.json 中的静态文件路径进行下载, 下载的时候是以 /duxiaodie/get/ 并加上 model.json 中的路径进行获取的
+浏览器在获取到 model.json 后，要对 model.json 中的静态文件路径进行下载，下载的时候是以 /duxiaodie/get/ 并加上 model.json 中的路径进行获取的
 ```
 2020-07-04 17:35:57	27568	httpgateway.py:242	127.0.0.1	7AE1996CCC878C97	GET	/duxiaodie/get/static/DuXiaoDie/model/ShizukuTalk/shizuku-48/model.moc	0.000066	400	-	stat:	params:	error_msg:API Not Found	res:
 ```
 显然是不符合预期的
 
-#### 方式 3 服务端静态文件 (推荐)
+#### 方式 3 服务端静态文件 （推荐）
 ```
 loadlive2d('live2d', 'static/DuXiaoDie/model/nepnep/index.json');
 ```
@@ -446,6 +481,309 @@ JS 只是个驱动器，其实 Live2D 效果的实现最大的工作量是在素
 这里数组有 3 项，每一项是一个纯对象，表示一套动作或一个行为，行为的描述在.mtn 文件中，然后还有一些附加的效果，例如"fade_in"指定淡入的时间，"fade_out"指定淡出的时间。因为某些动作在切换的时候太大，太明显，无法形成连贯的行为，于是前后动作会采用淡入淡出的方式进行过渡。
 
 "sound"属性表示相关行为所伴随的音效资源地址。
+
+## 4.4 如何丰富看板娘的 mousemove/click 监听事件
+
+看板娘的 mousemove/click 事件通过匹配 event.target 来弹出特定的信息
+
+咱们看下 event 都有哪些内容
+
+### 4.4.1 浅谈 event
+
+> 一个 mousemove event
+```
+{
+    altKey: false, // (只读) 当鼠标事件触发的时，如果 alt 键被按下，返回 true
+    bubbles: true,
+    button: 0,     // (只读) 当鼠标事件触发的时，如果鼠标按钮被按下（如果有的话），将会返回一个数值。
+    buttons: 0,
+    cancelBubble: false, // (只读)当鼠标事件触发的时，如果多个鼠标按钮被按下（如果有的话），将会返回一个或者多个代表鼠标按钮的数字。
+    cancelable: true,
+    clientX: 88,   // (只读) 鼠标指针在点击元素（DOM）中的 X 坐标
+    clientY: 681,  // (只读) 鼠标指针在点击元素（DOM）中的 Y 坐标
+    composed: true,
+    ctrlKey: false, // (只读) 当鼠标事件触发时，如果 control 键被按下，则返回 true；
+    currentTarget: null,
+    defaultPrevented: false,
+    detail: 0,
+    eventPhase: 0,
+    fromElement: span.ng-scope, // ====> object
+    isTrusted: true,
+    layerX: 88,
+    layerY: 9,
+    metaKey: false,
+    movementX: 0,
+    movementY: 0,
+    offsetX: 89,
+    offsetY: 10,
+    pageX: 88,
+    pageY: 681,
+    path: [a, li, ul.nav.ng-scope, nav.navi.clearfix.ng-scope, div.navi-wrap, div.aside-wrap.ng-scope, div.app-aside.hidden-xs.bg-black, div#app.app.ng-scope.app-header-fixed.app-aside-fixed, body.ng-scope, html.ng-scope, document, Window],
+    relatedTarget: span.ng-scope, // ====> object
+    returnValue: true,
+    screenX: 79,   // (只读) 鼠标指针相对于全局（屏幕）的 X 坐标
+    screenY: 724,  // (只读) 鼠标指针相对于全局（屏幕）的Y坐标
+    shiftKey: false,
+    sourceCapabilities: {firesTouchEvents: false},
+    srcElement: a, // ====> object
+    target: {// ====> object a, 看板娘主要根据这个 target 进行触发对应操作
+        accessKey: "",
+        ariaAtomic: null,
+        ariaAutoComplete: null,
+        ariaBusy: null,
+        ariaChecked: null,
+        ariaColCount: null,
+        ariaColIndex: null,
+        ariaColSpan: null,
+        ariaCurrent: null,
+        ariaDescription: null,
+        ariaDisabled: null,
+        ariaExpanded: null,
+        ariaHasPopup: null,
+        ariaHidden: null,
+        ariaKeyShortcuts: null,
+        ariaLabel: null,
+        ariaLevel: null,
+        ariaLive: null,
+        ariaModal: null,
+        ariaMultiLine: null,
+        ariaMultiSelectable: null,
+        ariaOrientation: null,
+        ariaPlaceholder: null,
+        ariaPosInSet: null,
+        ariaPressed: null,
+        ariaReadOnly: null,
+        ariaRelevant: null,
+        ariaRequired: null,
+        ariaRoleDescription: null,
+        ariaRowCount: null,
+        ariaRowIndex: null,
+        ariaRowSpan: null,
+        ariaSelected: null,
+        ariaSort: null,
+        ariaValueMax: null,
+        ariaValueMin: null,
+        ariaValueNow: null,
+        ariaValueText: null,
+        assignedSlot: null,
+        attributeStyleMap: {size: 0},
+        attributes: {0: ui-sref, 1: href, ui-sref: ui-sref, href: href, length: 2},
+        autocapitalize: "",
+        autofocus: false,
+        baseURI: "http://127.0.0.1:8585/main#/app/docs",
+        charset: "",
+        childElementCount: 2,
+        childNodes: [text, i.icon-question.icon, text, span.ng-scope],
+        children: [i.icon-question.icon, span.ng-scope],
+        classList: [value: ""],
+        className: "",
+        clientHeight: 39,
+        clientLeft: 0,
+        clientTop: 0,
+        clientWidth: 200,
+        contentEditable: "inherit",
+        coords: "",
+        dataset: {},
+        dir: "",
+        download: "",
+        draggable: true,
+        elementTiming: "",
+        enterKeyHint: "",
+        firstChild: text,
+        firstElementChild: i.icon-question.icon,
+        hash: "#/app/docs",
+        hidden: false,
+        host: "127.0.0.1:8585",
+        hostname: "127.0.0.1",
+        href: "http://127.0.0.1:8585/main#/app/docs",
+        hrefTranslate: "",
+        hreflang: "",
+        id: "",
+        innerHTML: "↵            <i class="icon-question icon"></i>↵            <span translate="aside.nav.your_stuff.DOCUMENTS" class="ng-scope">帮助文档</span>",
+        innerText: "帮助文档",   // ===========> 对应文字
+        inputMode: "",
+        isConnected: true,
+        isContentEditable: false,
+        jQuery224058537375354409191: {events: {…}, handle: ƒ},
+        lang: "",
+        lastChild: span.ng-scope,
+        lastElementChild: span.ng-scope,
+        localName: "a",
+        name: "",
+        namespaceURI: "http://www.w3.org/1999/xhtml",
+        nextElementSibling: null,
+        nextSibling: text,
+        nodeName: "A",
+        nodeType: 1,
+        nodeValue: null,
+        nonce: "",
+        offsetHeight: 39,
+        offsetLeft: 0,
+        offsetParent: li,
+        offsetTop: 0,
+        offsetWidth: 200,
+        onabort: null,
+        onanimationend: null,
+        onanimationiteration: null,
+        onanimationstart: null,
+        onauxclick: null,
+        onbeforecopy: null,
+        onbeforecut: null,
+        onbeforepaste: null,
+        onbeforexrselect: null,
+        onblur: null,
+        oncancel: null,
+        oncanplay: null,
+        oncanplaythrough: null,
+        onchange: null,
+        onclick: null,
+        onclose: null,
+        oncontextmenu: null,
+        oncopy: null,
+        oncuechange: null,
+        oncut: null,
+        ondblclick: null,
+        ondrag: null,
+        ondragend: null,
+        ondragenter: null,
+        ondragleave: null,
+        ondragover: null,
+        ondragstart: null,
+        ondrop: null,
+        ondurationchange: null,
+        onemptied: null,
+        onended: null,
+        onerror: null,
+        onfocus: null,
+        onformdata: null,
+        onfullscreenchange: null,
+        onfullscreenerror: null,
+        ongotpointercapture: null,
+        oninput: null,
+        oninvalid: null,
+        onkeydown: null,
+        onkeypress: null,
+        onkeyup: null,
+        onload: null,
+        onloadeddata: null,
+        onloadedmetadata: null,
+        onloadstart: null,
+        onlostpointercapture: null,
+        onmousedown: null,
+        onmouseenter: null,
+        onmouseleave: null,
+        onmousemove: null,
+        onmouseout: null,
+        onmouseover: null,
+        onmouseup: null,
+        onmousewheel: null,
+        onpaste: null,
+        onpause: null,
+        onplay: null,
+        onplaying: null,
+        onpointercancel: null,
+        onpointerdown: null,
+        onpointerenter: null,
+        onpointerleave: null,
+        onpointermove: null,
+        onpointerout: null,
+        onpointerover: null,
+        onpointerrawupdate: null,
+        onpointerup: null,
+        onprogress: null,
+        onratechange: null,
+        onreset: null,
+        onresize: null,
+        onscroll: null,
+        onsearch: null,
+        onseeked: null,
+        onseeking: null,
+        onselect: null,
+        onselectionchange: null,
+        onselectstart: null,
+        onstalled: null,
+        onsubmit: null,
+        onsuspend: null,
+        ontimeupdate: null,
+        ontoggle: null,
+        ontransitionend: null,
+        onvolumechange: null,
+        onwaiting: null,
+        onwebkitanimationend: null,
+        onwebkitanimationiteration: null,
+        onwebkitanimationstart: null,
+        onwebkitfullscreenchange: null,
+        onwebkitfullscreenerror: null,
+        onwebkittransitionend: null,
+        onwheel: null,
+        origin: "http://127.0.0.1:8585",
+        outerHTML: "<a ui-sref="app.docs" href="#/app/docs">↵            <i class="icon-question icon"></i>↵            <span translate="aside.nav.your_stuff.DOCUMENTS" class="ng-scope">帮助文档</span></a>",
+        outerText: "帮助文档",
+        ownerDocument: document,
+        parentElement: li,
+        parentNode: li,
+        part: [value: ""],
+        password: "",
+        pathname: "/main",
+        ping: "",
+        port: "8585",
+        prefix: null,
+        previousElementSibling: null,
+        previousSibling: text,
+        protocol: "http:",
+        referrerPolicy: "",
+        rel: "",
+        relList: [value: ""],
+        rev: "",
+        scrollHeight: 40,
+        scrollLeft: 0,
+        scrollTop: 0,
+        scrollWidth: 200,
+        search: "",
+        shadowRoot: null,
+        shape: "",
+        slot: "",
+        spellcheck: true,
+        style: {alignContent: "", alignItems: "", alignSelf: "", alignmentBaseline: "", all: "", …},
+        tabIndex: 0,
+        tagName: "A",
+        target: "",
+        text: "↵            ↵            帮助文档"textContent: "↵            ↵            帮助文档",
+        title: "",
+        translate: true,
+        type: "",
+        username: ""
+    },
+    timeStamp: 72896.56000002287,
+    toElement: a,
+    type: "mouseover",
+    view: {parent: Window, opener: null, top: Window, length: 0, frames: Window, …},
+    which: 0,
+    x: 88,
+    y: 681
+}
+```
+
+### 4.4.2 例子之鼠标移动到帮助文档 menu 时，弹出消息
+
+> waifu-tips.json
+```
+{
+    "mousemove": [
+        {
+            "selector": "a[href$='/docs']",
+            "text": ["要去看看 <span>{text}</span> 么？"]
+	    }
+    ]
+}
+```
+> 通过 event.target.innerText 替换文字
+```
+let text = randomSelection(tips.text);
+text = text.replace("{text}", event.target.innerText);
+```
+
+这样，当鼠标移动到帮助文档 menu 时，就会弹出 "要去看看 帮助文档 么"
 
 # 5 todo
 
