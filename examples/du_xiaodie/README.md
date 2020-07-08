@@ -26,6 +26,8 @@
     * [4.4 如何丰富看板娘的 mousemove/click 监听事件](#44-如何丰富看板娘的-mousemoveclick-监听事件)
         * [4.4.1 浅谈 event](#441-浅谈-event)
         * [4.4.2 例子之鼠标移动到帮助文档 menu 时，弹出消息](#442-例子之鼠标移动到帮助文档-menu-时弹出消息)
+    * [4.5 如何添加看板娘的按钮](#45-如何添加看板娘的按钮)
+        * [4.5.1 举个栗子 -- 返回主页](#451-举个栗子----返回主页)
 * [5 todo](#5-todo)
 * [6 传送门](#6-传送门)
 
@@ -493,16 +495,16 @@ JS 只是个驱动器，其实 Live2D 效果的实现最大的工作量是在素
 > 一个 mousemove event
 ```
 {
-    altKey: false, // (只读) 当鼠标事件触发的时，如果 alt 键被按下，返回 true
+    altKey: false, // （只读） 当鼠标事件触发的时，如果 alt 键被按下，返回 true
     bubbles: true,
-    button: 0,     // (只读) 当鼠标事件触发的时，如果鼠标按钮被按下（如果有的话），将会返回一个数值。
+    button: 0,     // （只读） 当鼠标事件触发的时，如果鼠标按钮被按下（如果有的话），将会返回一个数值。
     buttons: 0,
-    cancelBubble: false, // (只读)当鼠标事件触发的时，如果多个鼠标按钮被按下（如果有的话），将会返回一个或者多个代表鼠标按钮的数字。
+    cancelBubble: false, // （只读）当鼠标事件触发的时，如果多个鼠标按钮被按下（如果有的话），将会返回一个或者多个代表鼠标按钮的数字。
     cancelable: true,
-    clientX: 88,   // (只读) 鼠标指针在点击元素（DOM）中的 X 坐标
-    clientY: 681,  // (只读) 鼠标指针在点击元素（DOM）中的 Y 坐标
+    clientX: 88,   // （只读） 鼠标指针在点击元素（DOM）中的 X 坐标
+    clientY: 681,  // （只读） 鼠标指针在点击元素（DOM）中的 Y 坐标
     composed: true,
-    ctrlKey: false, // (只读) 当鼠标事件触发时，如果 control 键被按下，则返回 true；
+    ctrlKey: false, // （只读） 当鼠标事件触发时，如果 control 键被按下，则返回 true；
     currentTarget: null,
     defaultPrevented: false,
     detail: 0,
@@ -521,8 +523,8 @@ JS 只是个驱动器，其实 Live2D 效果的实现最大的工作量是在素
     path: [a, li, ul.nav.ng-scope, nav.navi.clearfix.ng-scope, div.navi-wrap, div.aside-wrap.ng-scope, div.app-aside.hidden-xs.bg-black, div#app.app.ng-scope.app-header-fixed.app-aside-fixed, body.ng-scope, html.ng-scope, document, Window],
     relatedTarget: span.ng-scope, // ====> object
     returnValue: true,
-    screenX: 79,   // (只读) 鼠标指针相对于全局（屏幕）的 X 坐标
-    screenY: 724,  // (只读) 鼠标指针相对于全局（屏幕）的Y坐标
+    screenX: 79,   // （只读） 鼠标指针相对于全局（屏幕）的 X 坐标
+    screenY: 724,  // （只读） 鼠标指针相对于全局（屏幕）的 Y 坐标
     shiftKey: false,
     sourceCapabilities: {firesTouchEvents: false},
     srcElement: a, // ====> object
@@ -784,7 +786,26 @@ text = text.replace("{text}", event.target.innerText);
 ```
 
 这样，当鼠标移动到帮助文档 menu 时，就会弹出 "要去看看 帮助文档 么"
+## 4.5 如何添加看板娘的按钮
 
+### 4.5.1 举个栗子 -- 返回主页
+
+> 增加返回主页按钮
+```
+<div id="waifu-tool">
+    <span class="fa fa-lg fa-home"></span>  // 增加这行，图标样式可以在 butterfly-fe 中查找
+    <span class="fa fa-lg fa-comment"></span>
+    <span class="fa fa-lg fa-camera-retro"></span>
+    <span class="fa fa-lg fa-info-circle"></span>
+    <span class="fa fa-lg fa-times"></span>
+</div>
+```
+> 增加返回主页按钮事件，点击按钮切换到 "/main#"
+```
+document.querySelector("#waifu-tool .fa-home").addEventListener("click", () => {
+    window.location = "/main#";
+});
+```
 # 5 todo
 
 ```
@@ -796,3 +817,4 @@ text = text.replace("{text}", event.target.innerText);
 > * 前端之 [live2d-widget](https://github.com/stevenjoezhang/live2d-widget)
 > * 后端之 [live2d_api](https://github.com/fghrsh/live2d_api) 模型可以在这里找到哈
 > * 模型 [imuncle/live2d](https://github.com/imuncle/live2d)
+> * 模型 [梦象](https://mx.paul.ren/)
