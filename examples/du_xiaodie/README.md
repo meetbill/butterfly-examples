@@ -211,6 +211,57 @@ loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
 如：
 loadlive2d('live2d', 'https://cdn.jsdelivr.net/gh/fghrsh/live2d_api/model/HyperdimensionNeptunia/nepnep/index.json');
 ```
+> 如何手动换装, 修改对应数字即可
+```
+localStorage.setItem("modelTexturesId",8)
+```
+> 数字对应的看板娘 https://cdn.jsdelivr.net/gh/fghrsh/live2d_api/model_list.json
+```
+{
+    "models": [
+        "Potion-Maker/Pio",
+        "Potion-Maker/Tia",
+        "bilibili-live/22",
+        "bilibili-live/33",
+        [
+            "ShizukuTalk/shizuku-48",
+            "ShizukuTalk/shizuku-pajama"
+        ],
+        [                                                       // modelId 为 5
+            "HyperdimensionNeptunia/neptune_classic",
+            "HyperdimensionNeptunia/nepnep",                    // modelTexturesId 为 1 时，为 nepnep
+            "HyperdimensionNeptunia/neptune_santa",
+            "HyperdimensionNeptunia/nepmaid",
+            "HyperdimensionNeptunia/nepswim",
+            "HyperdimensionNeptunia/noir_classic",
+            "HyperdimensionNeptunia/noir",
+            "HyperdimensionNeptunia/noir_santa",
+            "HyperdimensionNeptunia/noireswim",                 // modelTexturesId 为 8，noire (诺瓦露) 泳装
+            "HyperdimensionNeptunia/blanc_classic",
+            "HyperdimensionNeptunia/blanc_normal",
+            "HyperdimensionNeptunia/blanc_swimwear",
+            "HyperdimensionNeptunia/vert_classic",
+            "HyperdimensionNeptunia/vert_normal",
+            "HyperdimensionNeptunia/vert_swimwear",
+            "HyperdimensionNeptunia/nepgear",
+            "HyperdimensionNeptunia/nepgear_extra",
+            "HyperdimensionNeptunia/nepgearswim",
+            "HyperdimensionNeptunia/histoire",
+            "HyperdimensionNeptunia/histoirenohover"
+        ],
+        "KantaiCollection/murakumo"
+    ],
+    "messages": [
+        "来自 Potion Maker 的 Pio 酱 ~",
+        "来自 Potion Maker 的 Tia 酱 ~",
+        "来自 Bilibili Live 的 22 哦 ~",
+        "来自 Bilibili Live 的 33 的说",
+        "Shizuku Talk ！这里是 Shizuku ~",
+        "Nep! Nep! 超次元游戏：海王星 系列",
+        "艦隊これくしょん / 叢雲(むらくも)"
+    ]
+}
+```
 #### 方式 2 服务端接口获取 model.json
 ```
 loadlive2d("live2d", `${apiPath}get/?id=${modelId}-${modelTexturesId}`);
