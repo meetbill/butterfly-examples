@@ -1,0 +1,57 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">消息队列</h1>
+</div>
+<div class="wrapper-md" ng-controller="CanghaiMQCtrl">
+    <h3>Queues</h3>
+    <p class="intro">
+        下面的列表包含所有已注册的队列，其中包含队列中当前作业的数量。
+    </p>
+
+    <div class="panel panel-default">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Queue</th>
+                    <th>Queued jobs</th>
+                    <th>Deferred jobs</th>
+                    <th>Started jobs</th>
+                    <th>Finished jobs</th>
+                    <th>Failed jobs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="queue in queues">
+                    <td>__queue.name__</td>
+                    <td><a class="text-info" ui-sref="app.canghai.mq_jobs({queue_name:queue.name, registry_name: 'queued'})">__queue.count__</a></td>
+                    <td><a class="text-info" ui-sref="app.canghai.mq_jobs({queue_name:queue.name, registry_name: 'deferred'})">__queue.deferred_job_registry_count__</a></td>
+                    <td><a class="text-info" ui-sref="app.canghai.mq_jobs({queue_name:queue.name, registry_name: 'started'})">__queue.started_job_registry_count__</a></td>
+                    <td><a class="text-info" ui-sref="app.canghai.mq_jobs({queue_name:queue.name, registry_name: 'finished'})">__queue.finished_job_registry_count__</a></td>
+                    <td><a class="text-info" ui-sref="app.canghai.mq_jobs({queue_name:queue.name, registry_name: 'failed'})">__queue.failed_job_registry_count__</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3>Workers</h3>
+    <p class="intro">
+        下面的列表包含所有已注册的 worker 及其状态和任务队列。
+    </p>
+
+    <div class="panel panel-default">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Worker</th>
+                    <th>Current job</th>
+                    <th>Queues</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="worker in workers">
+                    <td>__worker.name__</td>
+                    <td>__worker.current_job__</td>
+                    <td>__worker.queues__</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

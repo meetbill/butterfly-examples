@@ -18,9 +18,10 @@
 ## Butterfly 示例
 
 > * [Redis 资源计算器](./examples/resource-calculator)
-> * [定时任务平台 -- 如期](./examples/ruqi)
 > * [定时任务平台含登录页](./examples/crontab_auth) --- 旧
 > * [看板娘 ------ 度小蝶](./examples/du_xiaodie)
+> * [常用组件之任务调度--如期](./examples/ruqi)
+> * [常用组件之任务展示--沧海](./examples/canghai) 异步任务展示
 
 ## 参加步骤
 

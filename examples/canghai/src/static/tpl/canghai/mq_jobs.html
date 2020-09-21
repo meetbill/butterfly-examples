@@ -1,0 +1,41 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">消息队列之任务列表</h1>
+</div>
+<div class="wrapper-md" ng-controller="CanghaiMQJobsCtrl">
+    <h3>Queues 任务列表</h3>
+    <p class="intro">
+        下面的列表包含队列默认情况下的所有排队任务，按时间排序（最早的在顶部）。
+    </p>
+
+    <div class="panel panel-default">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th style="width: 200px;">队列名称: </th>
+                <td>__queueName__</td></tr>
+            <tr>
+                <th>任务状态:</th>
+                <td>__registryName__</td></tr>
+        </table>
+    </div>
+    <div class="panel panel-default">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>id</th>
+                    <th width="600px">描述</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="job in jobs">
+                    <td><a class="text-info" ui-sref="app.canghai.mq_jobinfo({job_id: job.id})">__job.id__</a></td>
+                    <td>__job.description__</td>
+                    <td>__job.created_at__</td>
+                    <td>xx</td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination boundary-links="true" boundary-link-numbers="true" total-items="totalItems" ng-model="currentPage" max-size="maxSize" items-per-page="itemsPerPage" ng-change="pageChanged()" previous-text="上一页" next-text="下一页" first-text="第一页" last-text="第末页"></pagination>
+    </div>
+</div>
