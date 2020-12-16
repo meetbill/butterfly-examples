@@ -56,19 +56,29 @@ def get_jobs(req):
 
 
 @funcattr.api
-def add_job(req, name, rule, cmd):
+def add_job(req, trigger, name, cmd, rule):
     """
     添加定时任务
 
     Args:
-        name: (str) job name
-        rule: (str) "* * * * * *"
-        cmd: (str) 执行命令
+        trigger: (str) cron/interval/date
+        name   : (str) job name
+        rule   : (str) "* * * * * *"
+        cmd    : (str) 执行命令
     Returns:
         status, content, headers
     """
     isinstance(req, Request)
-    if crontab.add_job(name, rule, cmd):
+    func_map = {
+            "cron": crontab.add_cron_job,
+            "interval": crontab.add_interval_job,
+            "date": crontab.add_date_job,
+            }
+
+    if trigger not in func_map.keys():
+        return retstat.ERR, {}, [(__info, __version)]
+
+    if func_map[trigger](name, cmd, rule):
         return retstat.OK, {}, [(__info, __version)]
     else:
         return retstat.ERR, {}, [(__info, __version)]
