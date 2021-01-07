@@ -1,0 +1,67 @@
+﻿<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">添加任务</h1>
+</div>
+<div class="modal-body wrapper-lg">
+    <div class="panel panel-default">
+        <div class="panel-heading font-bold">
+            任务参数
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="get">
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-job-id">任务名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="input-job-id" ng-model="params.job_id">
+                        <span class="help-block m-b-none">qn_host</span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">分类名</label>
+                    <div class="col-sm-10">
+                        <div class="btn-group m-r">
+                            <label class="btn btn-default" ng-model="params.job_name" btn-radio="'rdb'" uncheckable>rdb 任务</label>
+                            <label class="btn btn-default" ng-model="params.job_name" btn-radio="'qingnang'" uncheckable>青囊</label>
+                            <label class="btn btn-default" ng-model="params.job_name" btn-radio="'platform'" uncheckable>平台</label>
+                            <label class="btn btn-default" ng-model="params.job_name" btn-radio="'other'" uncheckable>其他</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-cmd">执行命令</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="input-cmd" ng-model="params.cmd">
+                        <span class="help-block m-b-none">bash scripts/xx/xx.sh 或者 python scripts/xx/xx.py</span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">任务类型</label>
+                    <div class="col-sm-10">
+                        <div class="btn-group m-r">
+                            <label class="btn btn-default" ng-model="params.job_trigger" btn-radio="'interval'" uncheckable>周期</label>
+                            <label class="btn btn-default" ng-model="params.job_trigger" btn-radio="'date'" uncheckable>单次</label>
+                            <label class="btn btn-default" ng-model="params.job_trigger" btn-radio="'cron'" uncheckable>定时</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-rule">执行规则</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="input-rule" ng-model="params.rule">
+                        <span class="help-block m-b-none">周期规则: Xs/Xm/Xh/Xd</span>
+                        <span class="help-block m-b-none">单次规则: "2020-12-16 18:03:17"/"2020-12-16 18:05:17.682862"/"now"</span>
+                        <span class="help-block m-b-none">定时规则: "* * * * * *"</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()" type="button">取消</button>
+        <button class="btn btn-primary" ng-click="ok()" type="submit">确定</button>
+    </div>
+</div>

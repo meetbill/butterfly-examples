@@ -1,0 +1,14 @@
+﻿<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h4">如期：定时任务执行列表</h1></div>
+<div class="wrapper-md" ng-controller="SchedulerHistoryListCtrl">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button type="submit" class="btn m-b-xs btn-default pull-right m-r-xs" ng-click="search()">查询</button>
+            <input ng-model="searchValue" class="form-control w-sm pull-right m-r-xs" placeholder="输入关键字" ng-keyup="myKeyup($event)">
+            <select ng-model="selectedName" ng-options="x for x in searchNames"  class="form-control w-sm pull-right m-r-xs"></select>
+        </div>
+        <div class="table-responsive">
+            <div ui-grid="gridOptions" ui-grid-edit ui-grid-resize-columns ui-grid-pagination style="min-height:630px"></div>
+        </div>
+    </div>
+</div>
