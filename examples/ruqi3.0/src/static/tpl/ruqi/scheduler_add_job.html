@@ -33,7 +33,10 @@
                     <label class="col-sm-2 control-label" for="input-cmd">执行命令</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="input-cmd" ng-model="params.cmd">
-                        <span class="help-block m-b-none">bash scripts/xx/xx.sh 或者 python scripts/xx/xx.py</span>
+                        <span class="help-block m-b-none">【脚本 1】bash scripts/xx/xx.sh</span>
+                        <span class="help-block m-b-none">【脚本 2】python scripts/xx/xx.py arg1 arg2</span>
+                        <span class="help-block m-b-none">【URL POST 请求 1】http://127.0.0.1:8585/demo_api/hello#{"str_info":"hello"}</span>
+                        <span class="help-block m-b-none">【URL POST 请求 2】http://127.0.0.1:8585/demo_api/ping</span>
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -52,9 +55,9 @@
                     <label class="col-sm-2 control-label" for="input-rule">执行规则</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="input-rule" ng-model="params.rule">
-                        <span class="help-block m-b-none">周期规则: Xs/Xm/Xh/Xd</span>
-                        <span class="help-block m-b-none">单次规则: "2020-12-16 18:03:17"/"2020-12-16 18:05:17.682862"/"now"</span>
-                        <span class="help-block m-b-none">定时规则: "* * * * * *"</span>
+                        <span class="help-block m-b-none">周期规则: Xs/Xm/Xh/Xd, 如: 10s(每 10s 进行一次操作)</span>
+                        <span class="help-block m-b-none">单次规则: 2020-12-16 18:03:17/2020-12-16 18:05:17.682862/now</span>
+                        <span class="help-block m-b-none">定时规则: *(秒) *(分) *(时) *(日) *(月) *(周)，如：0 20 2 * * *(每天凌晨 2:20 进行操作)</span>
                     </div>
                 </div>
             </form>

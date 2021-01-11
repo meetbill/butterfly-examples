@@ -27,6 +27,8 @@ tags:
     * [2.2 接口](#22-接口)
         * [2.2.1 查询](#221-查询)
         * [2.2.2 任务操作](#222-任务操作)
+            * [添加任务](#添加任务)
+            * [删除任务](#删除任务)
 * [3 Wiki](#3-wiki)
 
 <!-- vim-markdown-toc -->
@@ -55,10 +57,7 @@ while True:
 
 ### 2.1.2 部署 ruqi3.0 后端服务(使用 MySQL jobstore)
 
-> handler
-```
-cp -rf src/handlers/ruqi ${butterfly_dir}/handlers/
-```
+handler(默认已添加)
 
 > 配置(conf/config.py)
 ```
@@ -155,19 +154,36 @@ response:
 }
 ```
 ### 2.2.2 任务操作
-> 添加任务
+
+#### 添加任务
 ```
- curl -v -d '{"job_trigger":"interval", "job_id":"test3", "job_name":"platform", "rule":"10s","cmd":"bash scripts/test.sh"}' "http://127.0.0.1:8585/ruqi/add_job"
+$ curl -v -d '{"job_trigger":"interval", "job_id":"test3", "job_name":"platform", "rule":"10s","cmd":"bash scripts/test.sh"}' "http://127.0.0.1:8585/ruqi/add_job"
 
 response:
 {
     "stat": "OK"
 }
 ```
-> 删除任务
+
+> 备注
+```
+----------------------------------------------------------cmd
+【脚本 1】bash scripts/xx/xx.sh
+【脚本 2】python scripts/xx/xx.py arg1 arg2
+【URL POST 请求 1】http://127.0.0.1:8585/demo_api/hello#{"str_info":"hello"}    # 使用 "#" 分割 URL 和请求体数据
+【URL POST 请求 2】http://127.0.0.1:8585/demo_api/ping
+
+----------------------------------------------------------rule
+周期规则: Xs/Xm/Xh/Xd, 如: 10s(每 10s 进行一次操作)
+单次规则: 2020-12-16 18:03:17/2020-12-16 18:05:17.682862/now
+定时规则: *(秒) *(分) *(时) *(日) *(月) *(周)，如：0 20 2 * * *(每天凌晨 2:20 进行操作)
 ```
 
-curl "http://127.0.0.1:8585/ruqi/remove_job?job_id=test3"
+
+#### 删除任务
+```
+
+$ curl "http://127.0.0.1:8585/ruqi/remove_job?job_id=test3"
 
 response:
 {

@@ -110,7 +110,11 @@ function ($scope, $modal, i18nService, Request, $httpParamSerializer, $statePara
         },
         {
             field: 'cmd_output',
-            displayName: '程序输出'
+            displayName: '程序输出',
+            cellTemplate: ''
+            + '<div>' //+'<div class="ui-grid-cell-contents">'
+            + '<button ng-click="grid.appScope.showOutput(row.entity.cmd_output)" type="button" class="btn-info btn">output</button>'
+            + '</div>',
         },
         {
             field: 'cmd_cost',
@@ -144,4 +148,21 @@ function ($scope, $modal, i18nService, Request, $httpParamSerializer, $statePara
         $scope.gridOptions.paginationCurrentPage = 1;
         getPagedDataAsync($scope.gridOptions.paginationCurrentPage);
     };
+    // -------- 按钮函数 ----------------
+    $scope.showOutput = function (output) {
+        var modalInstance = $modal.open({
+            templateUrl: 'static/tpl/ruqi/scheduler_history_output.html',
+            controller: 'HistoryOutputModalCtrl',
+            size: 'lg',
+            resolve: {
+                output: function () {
+                    return output;
+                }
+            }
+        });
+    };
+}]);
+app.controller('HistoryOutputModalCtrl', ['$scope', '$modalInstance', 'output',
+function ($scope, $modalInstance, output) {
+    $scope.output = output;
 }]);
