@@ -29,6 +29,7 @@ __version = "1.0.1"
 if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
 
+
 def serialize_date(dt):
     """
     将 UTC datetime 转换为 localtime 格式化时间
@@ -198,7 +199,6 @@ def list_msgs(req, queue_name, registry_name, page_size=20, page_index=1):
         queue_name, registry_name, offset, per_page
     )
 
-
     data = dict(
         name=queue_name, registry_name=registry_name, msgs=msgs, total_items=total_items
     )
@@ -212,6 +212,7 @@ def msg_info(req, msg_id):
         id=msg.id,
         created_at=serialize_date(msg.created_at),
         enqueued_at=serialize_date(msg.enqueued_at),
+        started_at=serialize_date(msg.started_at),
         ended_at=serialize_date(msg.ended_at),
         origin=msg.origin,
         status=msg.get_status(),
