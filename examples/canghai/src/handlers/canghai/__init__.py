@@ -33,6 +33,9 @@ def serialize_date(dt):
     """
     将 UTC datetime 转换为 localtime 格式化时间
     """
+    if dt is None:
+        return "-"
+
     ds_str = dt.strftime("%Y-%m-%d %H:%M:%S")
     time_stamp = calendar.timegm(time.strptime(ds_str, '%Y-%m-%d %H:%M:%S'))
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_stamp))
