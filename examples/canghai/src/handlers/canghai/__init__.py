@@ -30,7 +30,7 @@ if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
 
 
-def serialize_date(dt):
+def _serialize_date(dt):
     """
     将 UTC datetime 转换为 localtime 格式化时间
     """
@@ -40,6 +40,67 @@ def serialize_date(dt):
     ds_str = dt.strftime("%Y-%m-%d %H:%M:%S")
     time_stamp = calendar.timegm(time.strptime(ds_str, '%Y-%m-%d %H:%M:%S'))
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_stamp))
+
+
+def _serialize_msg(msg):
+    """
+    序列化 msg
+
+    Args:
+        msg: (object)
+    备注:
+        msg 为 None 时可能是:
+        (1) 从队列、失败、完成 set 中获取到了此 msg ，但此 msg 的 key 已被删除
+    """
+    if msg is None:
+        return dict(
+            id="except_msg",
+            created_at="-",
+            ended_at="-",
+            exc_info="get_msg failed",
+            description="get_msg_failed"
+        )
+
+    return dict(
+        id=msg.id,
+        created_at=_serialize_date(msg.created_at),
+        ended_at=_serialize_date(msg.ended_at),
+        exc_info=str(msg.exc_info) if msg.exc_info else None,
+        description=msg.description,
+    )
+
+
+def _get_queue_registry_msgs_count(queue_name, registry_name, offset, per_page):
+    """
+    获取此队列中特定状态的 msg_ids
+
+    Args:
+        queue_name: (string)
+        registry_name: (string)
+        offset: (int) offset_start
+        per_page: (int) page_size
+    Returns:
+        total_items, msg_ids
+    """
+    queue = Queue(queue_name, connection=baichuan_connection)
+    if registry_name != "queued":
+        if per_page >= 0:
+            per_page = offset + (per_page - 1)
+
+        if registry_name == "failed":
+            current_queue = FailedMsgRegistry(queue_name, connection=baichuan_connection)
+        elif registry_name == "started":
+            current_queue = StartedMsgRegistry(queue_name, connection=baichuan_connection)
+        elif registry_name == "finished":
+            current_queue = FinishedMsgRegistry(queue_name, connection=baichuan_connection)
+    else:
+        current_queue = queue
+
+    # 队列中此状态 msg 的总数
+    total_items = current_queue.count
+
+    msg_ids = current_queue.get_msg_ids(offset, per_page)
+    return (total_items, msg_ids)
 
 
 @funcattr.api
@@ -117,7 +178,7 @@ def list_workers(req):
         return dict(
             msg_id=msg.id,
             description=msg.description,
-            created_at=serialize_date(msg.created_at),
+            created_at=_serialize_date(msg.created_at),
             call_string=msg.get_call_string(),
         )
 
@@ -152,52 +213,18 @@ def list_msgs(req, queue_name, registry_name, page_size=20, page_index=1):
         page_size       : 每页显示个数
         page_index      : 当前页数
     """
-    def serialize_msg(msg):
-        """
-        序列化 msg
-        """
-        return dict(
-            id=msg.id,
-            created_at=serialize_date(msg.created_at),
-            ended_at=serialize_date(msg.ended_at),
-            exc_info=str(msg.exc_info) if msg.exc_info else None,
-            description=msg.description,
-        )
-
-    def get_queue_registry_msgs_count(queue_name, registry_name, offset, per_page):
-        """
-        获取此队列中特定状态的 msgs
-        """
-        queue = Queue(queue_name, connection=baichuan_connection)
-        if registry_name != "queued":
-            if per_page >= 0:
-                per_page = offset + (per_page - 1)
-
-            if registry_name == "failed":
-                current_queue = FailedMsgRegistry(queue_name, connection=baichuan_connection)
-            elif registry_name == "started":
-                current_queue = StartedMsgRegistry(queue_name, connection=baichuan_connection)
-            elif registry_name == "finished":
-                current_queue = FinishedMsgRegistry(queue_name, connection=baichuan_connection)
-        else:
-            current_queue = queue
-
-        # 队列中此状态 msg 的总数
-        total_items = current_queue.count
-
-        msg_ids = current_queue.get_msg_ids(offset, per_page)
-        current_queue_msgs = [queue.fetch_msg(msg_id) for msg_id in msg_ids]
-        msgs = [serialize_msg(msg) for msg in current_queue_msgs]
-
-        return (total_items, msgs)
 
     current_page = int(page_index)
     per_page = int(page_size)
 
     offset = (current_page - 1) * per_page
-    total_items, msgs = get_queue_registry_msgs_count(
+    total_items, msg_ids = _get_queue_registry_msgs_count(
         queue_name, registry_name, offset, per_page
     )
+
+    queue = Queue(queue_name, connection=baichuan_connection)
+    current_queue_msgs = [queue.fetch_msg(msg_id) for msg_id in msg_ids]
+    msgs = [_serialize_msg(msg) for msg in current_queue_msgs]
 
     data = dict(
         name=queue_name, registry_name=registry_name, msgs=msgs, total_items=total_items
@@ -207,13 +234,18 @@ def list_msgs(req, queue_name, registry_name, page_size=20, page_index=1):
 
 @funcattr.api
 def msg_info(req, msg_id):
+    """
+    获取单个消息详情
+    Args:
+        msg_id: (String) msg id
+    """
     msg = Msg.fetch(msg_id, connection=baichuan_connection)
     data = dict(
         id=msg.id,
-        created_at=serialize_date(msg.created_at),
-        enqueued_at=serialize_date(msg.enqueued_at),
-        started_at=serialize_date(msg.started_at),
-        ended_at=serialize_date(msg.ended_at),
+        created_at=_serialize_date(msg.created_at),
+        enqueued_at=_serialize_date(msg.enqueued_at),
+        started_at=_serialize_date(msg.started_at),
+        ended_at=_serialize_date(msg.ended_at),
         origin=msg.origin,
         status=msg.get_status(),
         result=msg._result,
@@ -221,3 +253,45 @@ def msg_info(req, msg_id):
         description=msg.description,
     )
     return retstat.OK, {"data": data}, [(__info, __version)]
+
+
+@funcattr.api
+def delete_msg(req, msg_id):
+    """
+    删除单个消息
+    Args:
+        msg_id: (String) msg id
+    Returns:
+        OK
+    """
+    msg = Msg.fetch(msg_id, connection=baichuan_connection)
+    msg.delete()
+    return retstat.OK, {}, [(__info, __version)]
+
+
+@funcattr.api
+def empty_queue(req, queue_name, registry_name):
+    """
+    清空队列
+
+    Args:
+        queue_name: (string) queue_name
+        registry_name: (string) queued/started/finished/Failed
+    Returns:
+        OK
+    """
+    offset = 0
+    page_size = 1000
+
+    while True:
+        total_items, msg_ids = _get_queue_registry_msgs_count(
+            queue_name, registry_name, offset, page_size
+        )
+        for id in msg_ids:
+            delete_msg(req, id)
+
+        if len(msg_ids) < 1000:
+            break
+
+        offset = offset + 1
+    return retstat.OK, {}, [(__info, __version)]
