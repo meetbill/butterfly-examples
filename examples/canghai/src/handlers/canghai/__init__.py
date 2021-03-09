@@ -242,6 +242,7 @@ def msg_info(req, msg_id):
     msg = Msg.fetch(msg_id, connection=baichuan_connection)
     data = dict(
         id=msg.id,
+        msg_data = msg.data,
         created_at=_serialize_date(msg.created_at),
         enqueued_at=_serialize_date(msg.enqueued_at),
         started_at=_serialize_date(msg.started_at),
