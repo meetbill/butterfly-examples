@@ -213,15 +213,18 @@ def worker_info(req, name):
 
     worker_key = Worker.redis_worker_namespace_prefix + name
     worker = Worker.find_by_key(worker_key, connection=baichuan_connection)
-    print worker
     data = dict(
         name=worker.name,
         queues=serialize_queue_names(worker),
         state=str(worker.get_state()),
         version=getattr(worker, "version", ""),
         python_version=getattr(worker, "python_version", ""),
+        birth_date=_serialize_date(worker.birth_date),
+        last_heartbeat=_serialize_date(worker.last_heartbeat),
+        failed_msg_count=worker.failed_msg_count,
+        successful_msg_count=worker.successful_msg_count,
+        total_working_time=worker.total_working_time,
     )
-
     return retstat.OK, {"data": data}, [(__info, __version)]
 
 
