@@ -6,6 +6,8 @@
 
 # File Name: __init__.py
 # Description:
+    1.0.2 : 2021-03-11
+        增加 worker_info 功能
 
 """
 import time
@@ -24,7 +26,7 @@ from xlib.mq.registry import (
 )
 
 __info = "canghai"
-__version = "1.0.1"
+__version = "1.0.2"
 
 if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
@@ -182,26 +184,45 @@ def list_workers(req):
             call_string=msg.get_call_string(),
         )
 
-    def serialize_queue_names(worker):
-        """
-        序列化此 worker 关注的队列名字
-        """
-        return [q.name for q in worker.queues]
-
     workers = sorted(
         (
             dict(
                 name=worker.name,
-                queues=serialize_queue_names(worker),
+                queues_count=len(worker.queues),
                 state=str(worker.get_state()),
                 version=getattr(worker, "version", ""),
                 python_version=getattr(worker, "python_version", ""),
             )
             for worker in Worker.all(connection=baichuan_connection)
         ),
-        key=lambda w: (w["state"], w["queues"], w["name"]),
+        key=lambda w: (w["state"], w["queues_count"], w["name"]),
     )
     return retstat.OK, {"data": dict(workers=workers)}, [(__info, __version)]
+
+
+@funcattr.api
+def worker_info(req, name):
+    """
+    获取 worker 信息
+    """
+    def serialize_queue_names(worker):
+        """
+        序列化此 worker 关注的队列名字
+        """
+        return [q.name for q in worker.queues]
+
+    worker_key = Worker.redis_worker_namespace_prefix + name
+    worker = Worker.find_by_key(worker_key, connection=baichuan_connection)
+    print worker
+    data = dict(
+        name=worker.name,
+        queues=serialize_queue_names(worker),
+        state=str(worker.get_state()),
+        version=getattr(worker, "version", ""),
+        python_version=getattr(worker, "python_version", ""),
+    )
+
+    return retstat.OK, {"data": data}, [(__info, __version)]
 
 
 @funcattr.api
@@ -242,7 +263,7 @@ def msg_info(req, msg_id):
     msg = Msg.fetch(msg_id, connection=baichuan_connection)
     data = dict(
         id=msg.id,
-        msg_data = msg.data,
+        msg_data=msg.data,
         created_at=_serialize_date(msg.created_at),
         enqueued_at=_serialize_date(msg.enqueued_at),
         started_at=_serialize_date(msg.started_at),
