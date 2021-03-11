@@ -1,0 +1,35 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">子任务队列之任务详情</h1>
+</div>
+<div class="wrapper-md" ng-controller="CanghaiMQSubmsgInfoCtrl">
+
+    <div class="panel panel-default">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>序号</th>
+                    <th width="600px">实例</th>
+                    <th>状态</th>
+                    <th>时间</th>
+                    <th>附加信息</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="msg in submsgs">
+                    <td>__$index+1__</td>
+                    <td>__msg.name__</a></td>
+                    <td>
+                        <p class="form-control-static">
+                            <span class="label label-info"    ng-if="msg.status == 'PENDING'">__msg.status__</span>
+                            <span class="label label-warning"    ng-if="msg.status == 'RUNNING'">__msg.status__</span>
+                            <span class="label label-success"    ng-if="msg.status == 'SUCCESS'">__msg.status__</span>
+                            <span class="label label-danger"    ng-if="msg.status == 'FAILURE'">__msg.status__</span>
+                        </p>
+                    </td>
+                    <td>__msg.time__</td>
+                    <td><button popover-title="extra" popover="__msg.output__" class="btn btn-info">extra</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

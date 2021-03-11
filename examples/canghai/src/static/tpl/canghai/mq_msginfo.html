@@ -1,0 +1,55 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">消息队列之消息详情</h1>
+</div>
+<div class="wrapper-md" ng-controller="CanghaiMQMsgInfoCtrl">
+
+    <div class="panel panel-default">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th style="width: 200px;">msg id: </th>
+                <td>__msg.id__</td></tr>
+            <tr>
+                <th>描述: </th>
+                <td>__msg.description__</td></tr>
+            <tr>
+                <th>消息内容: </th>
+                <td>__msg.msg_data__</td></tr>
+            <tr>
+                <th>状态: </th>
+                <td>
+                    <p class="form-control-static">
+                        <span class="label label-info"     ng-if="msg.status == 'queued'">__msg.status__</span>
+                        <span class="label label-info"    ng-if="msg.status == 'deferred'">__msg.status__</span>
+                        <span class="label label-warning"    ng-if="msg.status == 'started'">__msg.status__</span>
+                        <span class="label label-success"    ng-if="msg.status == 'finished'">__msg.status__</span>
+                        <span class="label label-danger"    ng-if="msg.status == 'failed'">__msg.status__</span>
+                    </p>
+                </td></tr>
+            <tr>
+                <th>队列名称: </th>
+                <td>__msg.origin__</td></tr>
+            <tr>
+                <th>创建时间: </th>
+                <td>__msg.created_at__</td></tr>
+            <tr>
+                <th>进入队列时间: </th>
+                <td>__msg.enqueued_at__</td></tr>
+            <tr>
+                <th>执行开始时间: </th>
+                <td>__msg.started_at__</td></tr>
+            <tr>
+                <th>执行结束时间: </th>
+                <td>__msg.ended_at__</td></tr>
+            <tr>
+                <th>执行结果: </th>
+                <td>__msg.result__</td></tr>
+            <tr>
+                <th>执行信息: </th>
+                <td>__msg.exc_info__</td></tr>
+            <tr>
+                <th>子任务详情: </th>
+                <td><a class="text-info" ui-sref="app.canghai.mq_submsginfo({msg_id: msg.id})">子任务列表</a></td>
+            </tr>
+        </table>
+    </div>
+</div>

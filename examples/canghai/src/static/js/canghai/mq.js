@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('CanghaiMQCtrl', ['$scope','Request',function($scope, Request){
+app.controller('CanghaiMQCtrl', ['$scope','Request', '$state', function($scope, Request, $state){
 
     $scope.update_data=function (){
         Request.get("/canghai/list_workers",function(res){
@@ -11,5 +11,4 @@ app.controller('CanghaiMQCtrl', ['$scope','Request',function($scope, Request){
         }, false, true);
     }
     $scope.update_data()
-
 }]);

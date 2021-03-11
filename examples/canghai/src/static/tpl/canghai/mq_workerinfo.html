@@ -1,0 +1,51 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">消息队列之消费者详情</h1>
+</div>
+<div class="wrapper-md" ng-controller="CanghaiMQWorkerInfoCtrl">
+
+    <div class="panel panel-default">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th style="width: 200px;">worker name: </th>
+                <td>__worker.name__</td></tr>
+            <tr>
+                <th> state </th>
+                <td>__worker.state__</td></tr>
+            <tr>
+                <th>版本: </th>
+                <td>__worker.version__</td></tr>
+            <tr>
+                <th>Python 版本: </th>
+                <td>__worker.python_version__</td></tr>
+            <tr>
+                <th>birth_date: </th>
+                <td>__worker.birth_date__</td></tr>
+            <tr>
+                <th>last_heartbeat</th>
+                <td>__worker.last_heartbeat__</td></tr>
+            <tr>
+                <th>执行失败的消息数: </th>
+                <td>__worker.failed_msg_count__</td></tr>
+            <tr>
+                <th>执行成功的消息数: </th>
+                <td>__worker.successful_msg_count__</td></tr>
+            <tr>
+                <th>总体工作时间: </th>
+                <td>__worker.total_working_time__</td></tr>
+        </table>
+    </div>
+    <div class="panel panel-default">
+        <table class="table table-striped m-b-none">
+            <thead class="thead-light">
+                <tr>
+                    <th>关注的 queue</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="queue in worker.queues">
+                    <td>__queue__</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

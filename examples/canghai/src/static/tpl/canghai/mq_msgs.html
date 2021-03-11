@@ -1,7 +1,7 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">消息队列之任务列表</h1>
+    <h1 class="m-n font-thin h3">消息队列之消息列表</h1>
 </div>
-<div class="wrapper-md" ng-controller="CanghaiMQJobsCtrl">
+<div class="wrapper-md" ng-controller="CanghaiMQMsgsCtrl">
     <h3>Queues 任务列表</h3>
     <p class="intro">
         下面的列表包含队列默认情况下的所有排队任务，按时间排序（最早的在顶部）。
@@ -15,10 +15,13 @@
             <tr>
                 <th>任务状态:</th>
                 <td>__registryName__</td></tr>
+            <tr>
+                <th>操作:</th>
+                <td><button class="btn btn-danger" ng-click="emptyQueue()">清空</button></td></tr>
         </table>
     </div>
     <div class="panel panel-default">
-        <table class="table table-bordered">
+        <table class="table table-striped m-b-none">
             <thead class="thead-light">
                 <tr>
                     <th>id</th>
@@ -28,11 +31,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="job in jobs">
-                    <td><a class="text-info" ui-sref="app.canghai.mq_jobinfo({job_id: job.id})">__job.id__</a></td>
-                    <td>__job.description__</td>
-                    <td>__job.created_at__</td>
-                    <td>xx</td>
+                <tr ng-repeat="msg in msgs">
+                    <td><a class="text-info" ui-sref="app.canghai.mq_msginfo({msg_id: msg.id})">__msg.id__</a></td>
+                    <td>__msg.description__</td>
+                    <td>__msg.created_at__</td>
+                    <td><button class="btn btn-info" ng-click="deleteMsg(msg.id)">删除</button></td>
                 </tr>
             </tbody>
         </table>
