@@ -39,6 +39,7 @@
             <thead class="thead-light">
                 <tr>
                     <th>Worker</th>
+                    <th>Server name</th>
                     <th>Version</th>
                     <th>Queues_count</th>
                     <th>操作</th>
@@ -47,9 +48,14 @@
             <tbody>
                 <tr ng-repeat="worker in workers">
                     <td>__worker.name__</td>
+                    <td>__worker.nickname__</td>
                     <td>__worker.version__</td>
                     <td>__worker.queues_count__</td>
-                    <td><a class="text-info" ui-sref="app.canghai.mq_workerinfo({name: worker.name})">详情</a></td>
+                    <td>
+                        <button class="btn btn-info">
+                            <a ui-sref="app.canghai.mq_workerinfo({name: worker.name})">详情</a>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

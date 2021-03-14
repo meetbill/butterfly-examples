@@ -8,6 +8,8 @@
 # Description:
     1.0.2 : 2021-03-11
         增加 worker_info 功能
+    1.0.3 : 2021-03-14
+        worker 列表以及 worker info 中增加 nickname 属性，用于标记 butterfly 的功能
 
 """
 import time
@@ -26,7 +28,7 @@ from xlib.mq.registry import (
 )
 
 __info = "canghai"
-__version = "1.0.2"
+__version = "1.0.3"
 
 if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
@@ -188,6 +190,7 @@ def list_workers(req):
         (
             dict(
                 name=worker.name,
+                nickname=worker.nickname,
                 queues_count=len(worker.queues),
                 state=str(worker.get_state()),
                 version=getattr(worker, "version", ""),
@@ -215,6 +218,7 @@ def worker_info(req, name):
     worker = Worker.find_by_key(worker_key, connection=baichuan_connection)
     data = dict(
         name=worker.name,
+        nickname=worker.nickname,
         queues=serialize_queue_names(worker),
         state=str(worker.get_state()),
         version=getattr(worker, "version", ""),
