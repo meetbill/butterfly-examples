@@ -10,6 +10,9 @@
         增加 worker_info 功能
     1.0.3 : 2021-03-14
         worker 列表以及 worker info 中增加 nickname 属性，用于标记 butterfly 的功能
+    1.0.4 : 2021-03-17
+        msg 增加 handle_worker 属性
+        worker 增加 home_dir 属性
 
 """
 import time
@@ -28,7 +31,7 @@ from xlib.mq.registry import (
 )
 
 __info = "canghai"
-__version = "1.0.3"
+__version = "1.0.4"
 
 if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
@@ -223,6 +226,7 @@ def worker_info(req, name):
         state=str(worker.get_state()),
         version=getattr(worker, "version", ""),
         python_version=getattr(worker, "python_version", ""),
+        home_dir=getattr(worker, "home_dir", ""),
         birth_date=_serialize_date(worker.birth_date),
         last_heartbeat=_serialize_date(worker.last_heartbeat),
         failed_msg_count=worker.failed_msg_count,
@@ -277,6 +281,7 @@ def msg_info(req, msg_id):
         ended_at=_serialize_date(msg.ended_at),
         origin=msg.origin,
         status=msg.get_status(),
+        handle_worker=getattr(msg, "handle_worker", ""),
         result=msg._result,
         exc_info=str(msg.exc_info) if msg.exc_info else None,
         description=msg.description,
