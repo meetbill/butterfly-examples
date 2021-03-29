@@ -25,7 +25,8 @@
             <thead class="thead-light">
                 <tr>
                     <th>id</th>
-                    <th width="600px">描述</th>
+                    <th width="600px">消息内容</th>
+                    <th>描述</th>
                     <th>创建时间</th>
                     <th>操作</th>
                 </tr>
@@ -33,6 +34,7 @@
             <tbody>
                 <tr ng-repeat="msg in msgs">
                     <td><a class="text-info" ui-sref="app.canghai.mq_msginfo({msg_id: msg.id})">__msg.id__</a></td>
+                    <td>__msg.msg_data__</td>
                     <td>__msg.description__</td>
                     <td>__msg.created_at__</td>
                     <td><button class="btn btn-info" ng-click="deleteMsg(msg.id)">删除</button></td>

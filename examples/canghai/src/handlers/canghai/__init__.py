@@ -13,6 +13,8 @@
     1.0.4 : 2021-03-17
         msg 增加 handle_worker 属性
         worker 增加 home_dir 属性
+    1.0.5 : 2021-03-29
+        msg 列表增加 msg_data 属性
 
 """
 import time
@@ -31,7 +33,7 @@ from xlib.mq.registry import (
 )
 
 __info = "canghai"
-__version = "1.0.4"
+__version = "1.0.5"
 
 if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
@@ -65,6 +67,7 @@ def _serialize_msg(msg):
             created_at="-",
             ended_at="-",
             exc_info="get_msg failed",
+            msg_data="-",
             description="get_msg_failed"
         )
 
@@ -73,6 +76,7 @@ def _serialize_msg(msg):
         created_at=_serialize_date(msg.created_at),
         ended_at=_serialize_date(msg.ended_at),
         exc_info=str(msg.exc_info) if msg.exc_info else None,
+        msg_data=msg.data,
         description=msg.description,
     )
 
