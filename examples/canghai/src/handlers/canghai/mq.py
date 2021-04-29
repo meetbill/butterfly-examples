@@ -15,6 +15,8 @@
         worker 增加 home_dir 属性
     1.0.5 : 2021-03-29
         msg 列表增加 msg_data 属性
+    1.0.6 : 2021-04-29
+        修复清空队列时部分 msg 未删除的 BUG
 
 """
 import time
@@ -33,7 +35,7 @@ from xlib.mq.registry import (
 )
 
 __info = "canghai_mq"
-__version = "1.0.5"
+__version = "1.0.6"
 
 if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
@@ -321,6 +323,7 @@ def empty_queue(req, queue_name, registry_name):
     offset = 0
     page_size = 1000
 
+    deleted_count = 0
     while True:
         total_items, msg_ids = _get_queue_registry_msgs_count(
             queue_name, registry_name, offset, page_size
@@ -328,8 +331,9 @@ def empty_queue(req, queue_name, registry_name):
         for id in msg_ids:
             delete_msg(req, id)
 
+        deleted_count = deleted_count + len(msg_ids)
+
         if len(msg_ids) < 1000:
             break
 
-        offset = offset + 1
-    return retstat.OK, {}, [(__info, __version)]
+    return retstat.OK, {"deleted_count": deleted_count}, [(__info, __version)]
