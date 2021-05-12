@@ -17,6 +17,8 @@
         msg 列表增加 msg_data 属性
     1.0.6 : 2021-04-29
         修复清空队列时部分 msg 未删除的 BUG
+    1.0.7 : 2021-05-12
+        msg_info 接口检查到 msg 不存在时，返回 ERR_MSG_NOT_EXIST 错误
 
 """
 import time
@@ -28,6 +30,7 @@ from xlib.middleware import funcattr
 from xlib.mq.msg import Msg
 from xlib.mq import Worker
 from xlib.mq import Queue
+from xlib.mq import exceptions as mq_exceptions
 from xlib.mq.registry import (
     FailedMsgRegistry,
     FinishedMsgRegistry,
@@ -35,7 +38,7 @@ from xlib.mq.registry import (
 )
 
 __info = "canghai_mq"
-__version = "1.0.6"
+__version = "1.0.7"
 
 if "baichuan" in db.my_caches.keys():
     baichuan_connection = db.my_caches["baichuan"]
@@ -277,7 +280,10 @@ def msg_info(req, msg_id):
     Args:
         msg_id: (String) msg id
     """
-    msg = Msg.fetch(msg_id, connection=baichuan_connection)
+    try:
+        msg = Msg.fetch(msg_id, connection=baichuan_connection)
+    except mq_exceptions.NoSuchMsgError:
+        return "ERR_MSG_NOT_EXIST", {}, [(__info, __version)]
     data = dict(
         id=msg.id,
         msg_data=msg.data,
